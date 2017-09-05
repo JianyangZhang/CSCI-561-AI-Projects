@@ -1,7 +1,5 @@
 package solutions;
 
-import java.util.Arrays;
-
 public class Input {
 	private String method;
 	private int edge_length;
