@@ -1,5 +1,7 @@
 package solutions;
 
+import java.util.Arrays;
+
 public class Driver {
 
 	public static void main(String[] args) {
@@ -8,7 +10,9 @@ public class Driver {
 		
 		int[][] result = null;
 		if (input.getMethod().equals("DFS")) {
-			result = DFS.runDFS(input.getEdge_length(), input.getNumber_of_lizards(), input.getNursery());
+			result = DFS.run(input.getEdge_length(), input.getNumber_of_lizards(), input.getNursery());
+		} else if (input.getMethod().equals("BFS")) {
+			result = BFS.run(input.getEdge_length(), input.getNumber_of_lizards(), input.getNursery());
 		}
 		if (result != null) {
 			System.out.println("---------------------------");
@@ -23,5 +27,4 @@ public class Driver {
 			System.out.println("FAIL");
 		}
 	}
-
 }

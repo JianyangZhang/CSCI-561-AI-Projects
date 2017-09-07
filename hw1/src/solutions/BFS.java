@@ -1,6 +1,23 @@
 package solutions;
 
-public class DFS {
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
+class State {
+	int number_of_lizards;
+	int[][] nursery;
+	int last_i;
+	int last_j;
+	public State(int number_of_lizards, int[][] nursery, int last_i, int last_j) {
+		this.number_of_lizards = number_of_lizards; 
+		this.nursery = nursery;
+		this.last_i = last_i;
+		this.last_j = last_j;
+	}
+}
+
+public class BFS {
 	public static int[][] run(int edge_length, int number_of_lizards, int[][] nursery) {
 		int[][] result = new int[edge_length][edge_length];
 		int number_of_trees = 0;
@@ -17,62 +34,56 @@ public class DFS {
 			return null;
 		}
 		
-		boolean[] isOK = new boolean[1];
-		helper(edge_length, number_of_lizards, nursery, 0, 0, result, isOK);
-		return isOK[0] ? result : null;
-	}
-
-	// top-down DFS
-	private static void helper(int edge_length, int number_of_lizards, int[][] nursery, int i_start, int j_start, int[][] result, boolean[] isOK) {
-		/*System.out.println("---------------------");
-		System.out.println("number of lizard: " + number_of_lizards);
-		for (int i = 0; i < edge_length; i++) {
-			for (int j = 0; j < edge_length; j++) {
-				System.out.print(result[i][j]);
-			}
-			System.out.println();
-		}*/
-		
-		if (isOK[0]) {
-			return;
-		}
-		if (number_of_lizards == 0) {
-			isOK[0] = true;
-			return;
-		}
-
-		for (int i = i_start; i < edge_length; i++) {
-			int j = j_start;
-			if (i != i_start) {
-				j = 0;
-			}
-			for (; j < edge_length; j++) {
-				// if cur position is a tree
-				if (nursery[i][j] == 2) {
-					continue;
-				}
-				// put a lizard here, then go to next coordinate
-				result[i][j] = 1;
-				if (isValidPosition(i, j, result)) {
-					if (j != edge_length - 1) {
-						helper(edge_length, number_of_lizards - 1, nursery, i, j + 1, result, isOK);
-					} else {
-						helper(edge_length, number_of_lizards - 1, nursery, i + 1, 0, result, isOK);
-					}
-				}
-				// if it has found a solution, stop searching, 
-				// otherwise, current position should not put lizard, remove it and continue searching
-				if (isOK[0]) {
-					return;
-				} else {
-					result[i][j] = 0;
-				}
-			}
-		}
+		return helper(edge_length, number_of_lizards, nursery);
 	}
 	
-	// note: this method does not checking (i, j) itself
-	// it only checks if (i, j) conflicts with another girds
+	private static int[][] helper(int edge_length, int number_of_lizards, int[][] nursery) {
+		Queue<State> queue = new LinkedList<>();
+		queue.offer(new State(number_of_lizards, nursery, 0, -1));
+
+		while (!queue.isEmpty()) {
+			int size = queue.size();
+			for (int i = 0; i < size; i++) {
+				State state = queue.poll();
+				if (state.number_of_lizards == 0) {
+					return state.nursery;
+				}
+				
+				int start_i;
+				int start_j;
+				if (state.last_j + 1 > edge_length - 1) {
+					if (state.last_i + 1 > edge_length - 1) {
+						continue;
+					}
+					start_i = state.last_i + 1;
+					start_j = 0;
+				} else {
+					start_i = state.last_i;
+					start_j = state.last_j + 1;
+				}
+				
+				for (int i1 = start_i; i1 < edge_length; i1++) {
+					int j = start_j;
+					if (i1 != start_i) {
+						j = 0;
+					}
+					for (; j < edge_length; j++) {
+						int[][] newNursery = new int[edge_length][edge_length];
+						copyArray(state.nursery, newNursery);
+						if (newNursery[i1][j] == 2) {
+							continue;
+						}
+						newNursery[i1][j] = 1;
+						if (isValidPosition(i1, j, newNursery)) {
+							queue.offer(new State(state.number_of_lizards - 1, newNursery, i1, j));
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	private static boolean isValidPosition(int i, int j, int[][] result) {
 		int x;
 		int y;
@@ -202,5 +213,13 @@ public class DFS {
 			}
 		}	
 		return true;
+	}
+	
+	private static void copyArray(int[][] origin, int[][] newArray) {
+		for (int i = 0; i < origin.length; i++) {
+			for (int j = 0; j < origin[0].length; j++) {
+				newArray[i][j] = origin[i][j]; 
+			}
+		}
 	}
 }
