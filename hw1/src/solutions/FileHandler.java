@@ -1,12 +1,15 @@
 package solutions;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
-public class ReadInput {
+public class FileHandler {
 	public static final String INPUT_FILE_PATH = "./input.txt";
+	public static final String OUTPUT_FILE_PATH = "./output.txt";
 	public static Input getInput(){
 		Input input = null;
 		try {
@@ -28,5 +31,26 @@ public class ReadInput {
 			e.printStackTrace();
 		}
 		return input;
+	}
+	public static void writeOutput(int[][] result){
+		try {
+			BufferedWriter bw = new BufferedWriter(new FileWriter(OUTPUT_FILE_PATH));
+			if (result == null) {
+				bw.write("FAIL");
+			} else {
+				bw.write("OK");
+				bw.newLine();
+				for (int i = 0; i < result.length; i++) {
+					for (int j = 0; j < result[0].length; j++) {
+						bw.write(Integer.toString(result[i][j]));
+					}
+					bw.newLine();
+				}
+			}
+			bw.close();
+		} catch (Exception e) {
+			System.out.println("failed to write output.txt");
+			e.printStackTrace();
+		}
 	}
 }

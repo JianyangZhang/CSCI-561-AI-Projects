@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Driver {
 
 	public static void main(String[] args) {
-		Input input = ReadInput.getInput();
+		Input input = FileHandler.getInput();
 		input.print(); // debug
 		
 		int[][] result = null;
@@ -14,6 +14,10 @@ public class Driver {
 		} else if (input.getMethod().equals("BFS")) {
 			result = BFS.run(input.getEdge_length(), input.getNumber_of_lizards(), input.getNursery());
 		}
+		
+		FileHandler.writeOutput(result);
+		
+		// debug
 		if (result != null) {
 			System.out.println("---------------------------");
 			System.out.println("OK");
