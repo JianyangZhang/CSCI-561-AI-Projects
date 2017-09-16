@@ -24,18 +24,6 @@ public class DFS {
 
 	// top-down DFS
 	private static void helper(int edge_length, int number_of_lizards, int[][] nursery, int i_start, int j_start, int[][] result, boolean[] isOK) {
-		/*System.out.println("---------------------");
-		System.out.println("number of lizard: " + number_of_lizards);
-		for (int i = 0; i < edge_length; i++) {
-			for (int j = 0; j < edge_length; j++) {
-				System.out.print(result[i][j]);
-			}
-			System.out.println();
-		}*/
-		
-		if (isOK[0]) {
-			return;
-		}
 		if (number_of_lizards == 0) {
 			isOK[0] = true;
 			return;
@@ -55,9 +43,9 @@ public class DFS {
 				result[i][j] = 1;
 				if (isValidPosition(i, j, result)) {
 					if (j != edge_length - 1) {
-						helper(edge_length, number_of_lizards - 1, nursery, i, j + 1, result, isOK);
+						helper(edge_length, (number_of_lizards - 1), nursery, i, (j + 1), result, isOK);
 					} else {
-						helper(edge_length, number_of_lizards - 1, nursery, i + 1, 0, result, isOK);
+						helper(edge_length, (number_of_lizards - 1), nursery, (i + 1), 0, result, isOK);
 					}
 				}
 				// if it has found a solution, stop searching, 

@@ -1,6 +1,5 @@
 package solutions;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -19,11 +18,9 @@ class State {
 
 public class BFS {
 	public static int[][] run(int edge_length, int number_of_lizards, int[][] nursery) {
-		int[][] result = new int[edge_length][edge_length];
 		int number_of_trees = 0;
 		for (int i = 0; i < edge_length; i++) {
 			for (int j = 0; j < edge_length; j++) {
-				result[i][j] = nursery[i][j];
 				if (nursery[i][j] == 2) {
 					number_of_trees++;
 				}
@@ -42,41 +39,37 @@ public class BFS {
 		queue.offer(new State(number_of_lizards, nursery, 0, -1));
 
 		while (!queue.isEmpty()) {
-			int size = queue.size();
-			for (int i = 0; i < size; i++) {
-				State state = queue.poll();
-				if (state.number_of_lizards == 0) {
-					return state.nursery;
+			State state = queue.poll();
+			if (state.number_of_lizards == 0) {
+				return state.nursery;
+			}
+			int start_i;
+			int start_j;
+			if (state.last_j + 1 > edge_length - 1) {
+				if (state.last_i + 1 > edge_length - 1) {
+					continue;
 				}
-				
-				int start_i;
-				int start_j;
-				if (state.last_j + 1 > edge_length - 1) {
-					if (state.last_i + 1 > edge_length - 1) {
+				start_i = (state.last_i + 1);
+				start_j = 0;
+			} else {
+				start_i = state.last_i;
+				start_j = (state.last_j + 1);
+			}
+			
+			for (int i1 = start_i; i1 < edge_length; i1++) {
+				int j = start_j;
+				if (i1 != start_i) {
+					j = 0;
+				}
+				for (; j < edge_length; j++) {
+					if (nursery[i1][j] == 2) {
 						continue;
 					}
-					start_i = state.last_i + 1;
-					start_j = 0;
-				} else {
-					start_i = state.last_i;
-					start_j = state.last_j + 1;
-				}
-				
-				for (int i1 = start_i; i1 < edge_length; i1++) {
-					int j = start_j;
-					if (i1 != start_i) {
-						j = 0;
-					}
-					for (; j < edge_length; j++) {
-						int[][] newNursery = new int[edge_length][edge_length];
-						copyArray(state.nursery, newNursery);
-						if (newNursery[i1][j] == 2) {
-							continue;
-						}
-						newNursery[i1][j] = 1;
-						if (isValidPosition(i1, j, newNursery)) {
-							queue.offer(new State(state.number_of_lizards - 1, newNursery, i1, j));
-						}
+					int[][] newNursery = new int[edge_length][edge_length];
+					copyArray(state.nursery, newNursery);
+					newNursery[i1][j] = 1;
+					if (isValidPosition(i1, j, newNursery)) {
+						queue.offer(new State((state.number_of_lizards - 1), newNursery, i1, j));
 					}
 				}
 			}
