@@ -1,4 +1,4 @@
-package solutions;
+
 
 import java.util.Random;
 
@@ -18,18 +18,26 @@ public class SA {
 			return null;
 		}
 		
-		return helper(edge_length, number_of_lizards, nursery, Integer.MAX_VALUE);
+		long startTime = System.currentTimeMillis();
+		long timeElapsed = System.currentTimeMillis() - startTime;
+		while (timeElapsed < 280000) {
+			int[][] result = helper(edge_length, number_of_lizards, nursery, 100);
+			if (result != null) {
+				return result;
+			}
+			timeElapsed = System.currentTimeMillis() - startTime;
+		}
+		return null;
 	}
 	
-	private static int[][] helper(int edge_length, int number_of_lizards, int[][] nursery, int temperature) {
+	private static int[][] helper(int edge_length, int number_of_lizards, int[][] nursery, double temperature) {
 		// initialize a result
 		int[][] result = new int[edge_length][edge_length];
 		copyArray(nursery, result);
 		randomize(edge_length, number_of_lizards, result);
-		int currentCost = getTotalCost(result);
-		
+		int currentCost = getTotalCost(result);		
 		// find a better result
-		for (int i = temperature; i > 0; i--) {
+		for (double i = temperature; i > 0; i -= 0.0001) {
 			if (currentCost == 0) {
 				return result;
 			} else {
@@ -38,12 +46,13 @@ public class SA {
 				getNextState(edge_length, nextResult);
 				int nextCost = getTotalCost(nextResult);
 				int diff = currentCost - nextCost;
-                double threshold = Math.exp(diff / i);
-                double probability = Math.random();
-                if (diff > 0) {
+                if (diff >= 0) {
                 	result = nextResult;
                 	currentCost = nextCost;
                 } else {
+                    double threshold = Math.exp(diff / i);
+                    double probability = Math.random();
+                	// System.out.println("probability: " + probability + " | threshold: " + threshold);
                 	if (probability <= threshold) {
                 		result = nextResult;
                 		currentCost = nextCost;
@@ -87,7 +96,7 @@ public class SA {
 		result[row][col] = 1;
 	}
 	
-	public static int getTotalCost(int[][] result) {
+	private static int getTotalCost(int[][] result) {
         int cost = 0;
         for (int i = 0; i < result.length; i++) {
             for (int j = 0; j < result[0].length; j++) {

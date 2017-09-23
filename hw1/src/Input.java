@@ -1,4 +1,4 @@
-package solutions;
+
 
 public class Input {
 	private String method;

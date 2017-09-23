@@ -1,4 +1,4 @@
-package solutions;
+
 
 public class DFS {
 	public static int[][] run(int edge_length, int number_of_lizards, int[][] nursery) {

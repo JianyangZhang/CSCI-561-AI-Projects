@@ -1,12 +1,12 @@
-package solutions;
 
-public class Driver {
+
+public class homework {
 
 	public static void main(String[] args) {
 		Input input = FileHandler.getInput();
-		input.print(); // debug
-
-		long startTime = System.currentTimeMillis();
+		// input.print(); // debug
+		// long startTime = System.currentTimeMillis();
+		
 		int[][] result = null;
 		if (input.getMethod().equals("DFS")) {
 			result = DFS.run(input.getEdge_length(), input.getNumber_of_lizards(), input.getNursery());
@@ -16,8 +16,8 @@ public class Driver {
 			result = SA.run(input.getEdge_length(), input.getNumber_of_lizards(), input.getNursery());
 		}
 		FileHandler.writeOutput(result);
+		/*
 		long timeElapsed = System.currentTimeMillis() - startTime;		
-		
 		// debug
 		if (result != null) {
 			System.out.println("---------------------------");
@@ -33,5 +33,6 @@ public class Driver {
 			System.out.println("FAIL");
 		}
 		System.out.println("Time Elapsed: " + timeElapsed + " (ms)");
+		*/
 	}
 }

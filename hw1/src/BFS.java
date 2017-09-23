@@ -1,4 +1,4 @@
-package solutions;
+
 
 import java.util.LinkedList;
 import java.util.Queue;
@@ -35,6 +35,8 @@ public class BFS {
 	}
 	
 	private static int[][] helper(int edge_length, int number_of_lizards, int[][] nursery) {
+		long startTime = System.currentTimeMillis();
+		long timeElapsed;
 		Queue<State> queue = new LinkedList<>();
 		queue.offer(new State(number_of_lizards, nursery, 0, -1));
 
@@ -42,6 +44,10 @@ public class BFS {
 			State state = queue.poll();
 			if (state.number_of_lizards == 0) {
 				return state.nursery;
+			}
+			timeElapsed = System.currentTimeMillis() - startTime;
+			if (timeElapsed >= 297000) {
+				return null;
 			}
 			int start_i;
 			int start_j;
